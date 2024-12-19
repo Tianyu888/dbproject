@@ -107,7 +107,7 @@ def index(request):
     return render(request, "queryapp/index.html")
 
 client = OpenAI(
-    api_key="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"  # Replace with your OpenAI API key
+    api_key="YourApiKey"  # Replace with your OpenAI API key
 )
 
 
