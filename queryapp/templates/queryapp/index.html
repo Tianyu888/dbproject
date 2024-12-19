@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natural Language to SQL Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .result-section {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Natural Language to SQL Converter</h1>
+        <textarea id="query" rows="4" placeholder="Enter your natural language query here..."></textarea>
+        <button onclick="submitQuery()">Convert to SQL</button>
+
+        <div class="result-section">
+            <h3>Generated SQL Query:</h3>
+            <pre id="sql-output">No query generated yet.</pre>
+            <h3>Results:</h3>
+            <div id="table-output">No results available yet.</div>
+            <h3>Errors:</h3>
+            <pre id="error-output">No errors reported.</pre>
+        </div>
+    </div>
+
+    <script>
+        async function submitQuery() {
+            const query = document.getElementById("query").value;
+    
+            if (!query) {
+                alert("Please enter a query!");
+                return;
+            }
+    
+            // Send the query to the backend
+            const response = await fetch("/api/query/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ query })
+            });
+    
+            const result = await response.json();
+    
+            // Update UI with the response
+            document.getElementById("sql-output").textContent = result.sql || "No SQL query generated.";
+            const table = result.table || [];
+    
+            // Generate table HTML
+            const tableHTML = table.length
+                ? `
+                    <table border="1">
+                        <thead>
+                            <tr>${Object.keys(table[0]).map(col => `<th>${col}</th>`).join("")}</tr>
+                        </thead>
+                        <tbody>
+                            ${table.map(row => `
+                                <tr>${Object.values(row).map(val => `<td>${val}</td>`).join("")}</tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                  `
+                : "No data available.";
+    
+            document.getElementById("table-output").innerHTML = tableHTML;
+            document.getElementById("error-output").textContent = result.error || "No errors reported.";
+        }
+    </script>
+</body>
+</html>
