@@ -78,13 +78,13 @@ WSGI_APPLICATION = 'dbproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dbproject',   # 替换为您的数据库名称
-        'USER': 'root',        # 替换为您的数据库用户名
-        'PASSWORD': 'Sty20010929',    # 替换为您的数据库密码
-        'HOST': 'localhost',            # 或者数据库服务器的 IP 地址
-        'PORT': '3306',                 # 默认 MySQL 端口
+        'NAME': 'NameOfDababase',
+        'USER': 'root',
+        'PASSWORD': 'YourPassword'
+        'HOST': 'localhost',
+        'PORT': '3306',
         'OPTIONS': {
-            'charset': 'utf8mb4',       # 支持完整的 Unicode
+            'charset': 'utf8mb4',
         },
     }
 }
